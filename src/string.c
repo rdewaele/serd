@@ -100,9 +100,22 @@ read_sign(const char** sptr)
 }
 
 double
-serd_strtod(const char* str, char** endptr)
+serd_strtod(const char* str, size_t* end)
 {
 	double result = 0.0;
+
+#define SET_END(index) if (end) { *end = index; }
+
+	if (!strcmp(str, "NaN")) {
+		SET_END(3);
+		return NAN;
+	} else if (!strcmp(str, "-INF")) {
+		SET_END(4);
+		return -INFINITY;
+	} else if (!strcmp(str, "INF")) {
+		SET_END(3);
+		return INFINITY;
+	}
 
 	// Point s at the first non-whitespace character
 	const char* s = str;
@@ -136,10 +149,7 @@ serd_strtod(const char* str, char** endptr)
 		result *= pow(10, expt * expt_sign);
 	}
 
-	if (endptr) {
-		*endptr = (char*)s;
-	}
-
+	SET_END(s - str);
 	return result * sign;
 }
 
