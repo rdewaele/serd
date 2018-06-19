@@ -311,6 +311,11 @@ typedef enum {
 } SerdStyle;
 
 /**
+   Bitwise OR of SerdStyle values.
+*/
+typedef uint32_t SerdStyleFlags;
+
+/**
    Free memory allocated by Serd.
 
    This function exists because some systems require memory allocated by a
@@ -1212,7 +1217,7 @@ SERD_API
 SerdWriter*
 serd_writer_new(SerdWorld*      world,
                 SerdSyntax      syntax,
-                SerdStyle       style,
+                SerdStyleFlags  style,
                 SerdEnv*        env,
                 SerdWriteFunc   ssink,
                 void*           stream);
