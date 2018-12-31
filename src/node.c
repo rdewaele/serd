@@ -18,6 +18,7 @@
 
 #include "serd_internal.h"
 #include "string_utils.h"
+#include "warnings.h"
 
 #include <assert.h>
 #include <float.h>
@@ -27,15 +28,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef _WIN32
-#    ifndef isnan
-#        define isnan(x) _isnan(x)
-#    endif
-#    ifndef isinf
-#        define isinf(x) (!_finite(x))
-#    endif
-#endif
 
 static const size_t serd_node_align = sizeof(SerdNode);
 
@@ -491,6 +483,7 @@ is_uri_path_char(const char c)
 	if (is_alpha(c) || is_digit(c)) {
 		return true;
 	}
+
 	switch (c) {
 	case '-': case '.': case '_': case '~':	 // unreserved
 	case ':': case '@':	 // pchar
@@ -603,9 +596,11 @@ serd_digits(double abs)
 SerdNode*
 serd_new_decimal(double d, unsigned frac_digits, const SerdNode* datatype)
 {
-	if (isnan(d) || isinf(d)) {
+	SERD_DISABLE_CONVERSION_WARNINGS
+	if (!isfinite(d)) {
 		return NULL;
 	}
+	SERD_RESTORE_WARNINGS
 
 	const SerdNode* type       = datatype ? datatype : &serd_xsd_decimal.node;
 	const double    abs_d      = fabs(d);
@@ -630,7 +625,7 @@ serd_new_decimal(double d, unsigned frac_digits, const SerdNode* datatype)
 	char*    t   = s - 1;
 	uint64_t dec = (uint64_t)int_part;
 	do {
-		*t-- = '0' + (dec % 10);
+		*t-- = '0' + (char)(dec % 10);
 	} while ((dec /= 10) > 0);
 
 
@@ -640,16 +635,16 @@ serd_new_decimal(double d, unsigned frac_digits, const SerdNode* datatype)
 	double frac_part = fabs(d - int_part);
 	if (frac_part < DBL_EPSILON) {
 		*s++ = '0';
-		node->n_bytes = (s - buf);
+		node->n_bytes = (size_t)(s - buf);
 	} else {
-		uint64_t frac = llround(frac_part * pow(10.0, (int)frac_digits));
+		long long frac = llround(frac_part * pow(10.0, (int)frac_digits));
 		s += frac_digits - 1;
 		unsigned i = 0;
 
 		// Skip trailing zeros
 		for (; i < frac_digits - 1 && !(frac % 10); ++i, --s, frac /= 10) {}
 
-		node->n_bytes = (s - buf) + 1;
+		node->n_bytes = (size_t)(s - buf) + 1;
 
 		// Write digits from last trailing zero to decimal point
 		for (; i < frac_digits; ++i) {
@@ -668,7 +663,7 @@ serd_new_integer(int64_t i, const SerdNode* datatype)
 {
 	const SerdNode* type      = datatype ? datatype : &serd_xsd_integer.node;
 	int64_t         abs_i     = (i < 0) ? -i : i;
-	const unsigned  digits    = serd_digits(abs_i);
+	const unsigned  digits    = serd_digits((double)abs_i);
 	const size_t    type_len  = serd_node_total_size(type);
 	const size_t    total_len = digits + 2 + type_len;
 
@@ -683,7 +678,7 @@ serd_new_integer(int64_t i, const SerdNode* datatype)
 		++s;
 	}
 
-	node->n_bytes = (s - buf) + 1;
+	node->n_bytes = (size_t)((s - buf) + 1);
 
 	// Write integer part (right to left)
 	do {
