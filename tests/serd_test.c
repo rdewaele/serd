@@ -161,7 +161,7 @@ test_strict_write(void)
 	SerdEnv*    env    = serd_env_new(NULL);
 	SerdWriter* writer = serd_writer_new(world,
 	                                     SERD_TURTLE,
-	                                     SERD_WRITE_STRICT,
+	                                     0,
 	                                     env,
 	                                     (SerdWriteFunc)fwrite,
 	                                     fd);
@@ -632,7 +632,7 @@ main(void)
 
 	SerdWriter* writer = serd_writer_new(world,
 	                                     SERD_TURTLE,
-	                                     0,
+	                                     SERD_WRITE_LAX,
 	                                     env,
 	                                     (SerdWriteFunc)fwrite,
 	                                     fd);
@@ -740,7 +740,7 @@ main(void)
 	SerdSink* sink         = serd_sink_new(&n_statements, NULL);
 	serd_sink_set_statement_func(sink, count_statements);
 
-	SerdReader* reader = serd_reader_new(world, SERD_TURTLE, sink, 4096);
+	SerdReader* reader = serd_reader_new(world, SERD_TURTLE, 0, sink, 4096);
 	assert(reader);
 
 	serd_reader_add_blank_prefix(reader, "tmp");
