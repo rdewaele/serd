@@ -28,11 +28,12 @@ typedef struct {
 } Syntax;
 
 static const Syntax syntaxes[] = {
-	{SERD_TURTLE,   "turtle",   ".ttl"},
-	{SERD_NTRIPLES, "ntriples", ".nt"},
-	{SERD_NQUADS,   "nquads",   ".nq"},
-	{SERD_TRIG,     "trig",     ".trig"},
-	{(SerdSyntax)0, NULL, NULL}
+	{SERD_SYNTAX_EMPTY, "empty",    NULL},
+	{SERD_TURTLE,       "turtle",   ".ttl"},
+	{SERD_NTRIPLES,     "ntriples", ".nt"},
+	{SERD_NQUADS,       "nquads",   ".nq"},
+	{SERD_TRIG,         "trig",     ".trig"},
+	{SERD_SYNTAX_EMPTY, NULL,       NULL},
 };
 
 SerdSyntax
@@ -43,7 +44,7 @@ serd_syntax_by_name(const char* const name)
 			return s->syntax;
 		}
 	}
-	return (SerdSyntax)0;
+	return SERD_SYNTAX_EMPTY;
 }
 
 SerdSyntax
@@ -52,12 +53,13 @@ serd_guess_syntax(const char* const filename)
 	const char* ext = strrchr(filename, '.');
 	if (ext) {
 		for (const Syntax* s = syntaxes; s->name; ++s) {
-			if (!serd_strncasecmp(s->extension, ext, strlen(ext))) {
+			if (s->extension &&
+			    !serd_strncasecmp(s->extension, ext, strlen(ext))) {
 				return s->syntax;
 			}
 		}
 	}
-	return (SerdSyntax)0;
+	return SERD_SYNTAX_EMPTY;
 }
 
 bool
