@@ -102,6 +102,7 @@ lib_source = ['src/base64.c',
               'src/byte_sink.c',
               'src/byte_source.c',
               'src/cursor.c',
+              'src/decimal.c',
               'src/env.c',
               'src/inserter.c',
               'src/intmath.c',
@@ -187,6 +188,7 @@ def build(bld):
         for prog in [('serdi_static', 'src/serdi.c'),
                      ('base64_test', 'tests/base64_test.c'),
                      ('cursor_test', 'tests/cursor_test.c'),
+                     ('decimal_test', 'tests/decimal_test.c'),
                      ('intmath_test', 'tests/intmath_test.c'),
                      ('statement_test', 'tests/statement_test.c'),
                      ('sink_test', 'tests/sink_test.c'),
@@ -551,6 +553,7 @@ def test(tst):
     with tst.group('Unit') as check:
         check(['./base64_test'])
         check(['./cursor_test'])
+        check(['./decimal_test'])
         check(['./intmath_test'])
         check(['./statement_test'])
         check(['./sink_test'])

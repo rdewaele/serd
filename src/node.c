@@ -16,6 +16,7 @@
 
 #include "node.h"
 
+#include "decimal.h"
 #include "serd_internal.h"
 #include "string_utils.h"
 #include "system.h"
@@ -670,7 +671,7 @@ serd_new_integer(int64_t i, const SerdNode* datatype)
 {
 	const SerdNode* type      = datatype ? datatype : &serd_xsd_integer.node;
     uint64_t        abs_i     = (uint64_t)((i < 0) ? -i : i);
-    const unsigned  digits    = (unsigned)serd_digits((double)abs_i);
+	const unsigned  digits    = (unsigned)serd_count_digits(abs_i);
 	const size_t    type_len  = serd_node_total_size(type);
 	const size_t    total_len = digits + 2 + type_len;
 
