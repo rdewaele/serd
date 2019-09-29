@@ -99,6 +99,7 @@ def configure(conf):
          'Build unit tests':     bool(conf.env['BUILD_TESTS'])})
 
 lib_source = ['src/base64.c',
+              'src/bigint.c',
               'src/byte_sink.c',
               'src/byte_source.c',
               'src/cursor.c',
@@ -188,6 +189,7 @@ def build(bld):
         # Test programs
         for prog in [('serdi_static', 'src/serdi.c'),
                      ('base64_test', 'tests/base64_test.c'),
+                     ('bigint_test', 'tests/bigint_test.c'),
                      ('cursor_test', 'tests/cursor_test.c'),
                      ('decimal_test', 'tests/decimal_test.c'),
                      ('intmath_test', 'tests/intmath_test.c'),
@@ -554,6 +556,7 @@ def test(tst):
 
     with tst.group('Unit') as check:
         check(['./base64_test'])
+        check(['./bigint_test'])
         check(['./cursor_test'])
         check(['./decimal_test'])
         check(['./intmath_test'])
