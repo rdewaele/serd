@@ -18,8 +18,9 @@ serd (1.0.0) unstable;
   * Add option for writing terse output without newlines
   * Add support for writing terse collections
   * Report writer errors and add strict write mode
+  * Add support for xsd:float and xsd:double literals
 
- -- David Robillard <d@drobilla.net>  Sun, 28 Apr 2019 16:31:24 +0200
+ -- David Robillard <d@drobilla.net>  Sun, 13 Oct 2019 12:00:34 +0200
 
 serd (0.30.1) unstable;
 
