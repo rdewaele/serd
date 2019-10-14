@@ -115,6 +115,7 @@ lib_source = ['src/base64.c',
               'src/n3.c',
               'src/node.c',
               'src/nodes.c',
+              'src/normalise.c',
               'src/range.c',
               'src/reader.c',
               'src/sink.c',
@@ -558,7 +559,7 @@ def test(tst):
     import tempfile
 
     # Create test output directories
-    for i in ['bad', 'good', 'lax', 'terse', 'multifile',
+    for i in ['bad', 'good', 'lax', 'normalise', 'terse', 'multifile',
               'TurtleTests', 'NTriplesTests', 'NQuadsTests', 'TriGTests']:
         try:
             test_dir = os.path.join('tests', i)
@@ -661,6 +662,8 @@ def test(tst):
     test_suite(tst, serd_base + 'bad/', 'bad', None, 'Turtle')
     test_suite(tst, serd_base + 'lax/', 'lax', None, 'Turtle', ['-l'])
     test_suite(tst, serd_base + 'lax/', 'lax', None, 'Turtle')
+    test_suite(tst, serd_base + 'normalise/', 'normalise', None, 'Turtle',
+               ['-n'])
     test_suite(tst, serd_base + 'terse/', 'terse', None, 'Turtle', ['-t'],
                output_syntax='Turtle')
 
