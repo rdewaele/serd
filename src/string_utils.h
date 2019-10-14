@@ -107,15 +107,12 @@ serd_substrlen(const char* const    str,
                const size_t         len,
                SerdNodeFlags* const flags)
 {
-	if (flags) {
-		size_t i = 0;
-		*flags = 0;
-		for (; i < len && str[i]; ++i) {
-			serd_update_flags(str[i], flags);
-		}
-		return i;
+	size_t i = 0;
+	*flags = 0;
+	for (; i < len && str[i]; ++i) {
+		serd_update_flags(str[i], flags);
 	}
-	return strlen(str);
+	return i;
 }
 
 static inline int
