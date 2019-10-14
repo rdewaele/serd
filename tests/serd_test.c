@@ -495,7 +495,7 @@ main(void)
 	assert(serd_env_set_prefix(env, b, lit));
 
 	size_t    n_prefixes          = 0;
-	SerdSink* count_prefixes_sink = serd_sink_new(&n_prefixes, NULL);
+	SerdSink* count_prefixes_sink = serd_sink_new(&n_prefixes, NULL, NULL);
 	serd_sink_set_prefix_func(count_prefixes_sink, count_prefixes);
 	serd_env_set_prefix(env, pre, eg);
 	serd_env_write_prefixes(env, count_prefixes_sink);
@@ -652,7 +652,7 @@ main(void)
 	fseek(fd, 0, SEEK_SET);
 
 	size_t    n_statements = 0;
-	SerdSink* sink         = serd_sink_new(&n_statements, NULL);
+	SerdSink* sink         = serd_sink_new(&n_statements, NULL, NULL);
 	serd_sink_set_statement_func(sink, count_statements);
 
 	SerdReader* reader = serd_reader_new(world, SERD_TURTLE, 0, sink, 4096);

@@ -89,7 +89,7 @@ main(void)
 		serd_statement_new(base, uri, blank, NULL, NULL);
 
 	State     state = {SERD_SUCCESS, 0, 0, 0, 0, 0};
-	SerdSink* sink  = serd_sink_new(&state, env);
+	SerdSink* sink  = serd_sink_new(&state, NULL, env);
 
 	assert(serd_sink_get_env(sink) == env);
 
